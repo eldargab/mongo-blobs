@@ -1,0 +1,17 @@
+{
+  "name": "mongo-blobs",
+  "version": "0.0.0",
+  "private": true,
+  "description": "MongoDB GridFS compatible storage on top of monk",
+  "author": "Eldar Gabdullin <eldargab@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://eldargab@github.com/eldargab/mongo-blobs.git"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "test-log": "*",
+    "should": "*",
+    "monk": "*"
+  }
+}
