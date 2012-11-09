@@ -13,7 +13,7 @@ describe('Storage', function () {
 
   before(function (done) {
     db = monk('localhost/test')
-    storage = new Storage(db)
+    storage = Storage(db)
     db.driver.dropDatabase(done)
   })
 
