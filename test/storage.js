@@ -30,7 +30,7 @@ describe('Storage', function () {
     })
   })
 
-  describe('Downloads', function () {
+  describe('Download stream', function () {
     var blob
 
     before(function (done) {
@@ -63,6 +63,18 @@ describe('Storage', function () {
           head.should.eql(blob)
           done()
         })
+    })
+
+    it('Should destroy itself right', function (done) {
+      storage.createReadStream(blob)
+        .on('data', function () {
+          this.destroy()
+          this.destroy() // multiple destroyes are ok
+          this.readable.should.be.false
+          done()
+        })
+        .on('error', done)
+        .on('end', done)
     })
   })
 })
