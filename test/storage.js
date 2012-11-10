@@ -20,8 +20,7 @@ describe('Storage', function () {
   describe('Uploads', function () {
     it('Should support streaming', function (done) {
       storage.createWriteStream({chunkSize: 4, hello: 'world'})
-        .end('aaaabbbbcc')
-        .on('close', function () {
+        .end('aaaabbbbcc', function () {
           this.file.length.should.equal(10)
           this.file.md5.should.equal(md5('aaaabbbbcc'))
           this.file.hello.should.equal('world')
@@ -35,9 +34,8 @@ describe('Storage', function () {
 
     before(function (done) {
       storage.createWriteStream({chunkSize: 4})
-        .end('aaaabbbbxx')
         .on('error', done)
-        .on('close', function () {
+        .end('aaaabbbbxx', function () {
           blob = this.file
           done()
         })

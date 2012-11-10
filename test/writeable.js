@@ -33,7 +33,7 @@ describe('Writeable', function () {
     s.on('error', function (err) {
       log('error:' + err.message)
     })
-    s._close = log.fn('close')
+    s.on('close', log.fn('close'))
     s._write = function (data, cb) {
       data = data ? data.toString('utf8') : 'END'
       log('push:' + data)
@@ -90,12 +90,12 @@ describe('Writeable', function () {
       s.end()
       s.writeable.should.be.false
     })
-    it('Should close stream after end of pushing', function () {
-      s.end('aaaabbb')
+    it('Should support callback', function () {
+      s.end('aaaabbb', log.fn('DONE'))
       ds.done()
       ds.done()
       ds.done()
-      log.should.equal('push:aaaa push:bbb push:END close')
+      log.should.equal('push:aaaa push:bbb push:END DONE')
     })
   })
 
@@ -130,7 +130,7 @@ describe('Writeable', function () {
       s.destroy()
       s.writeable.should.be.false
     })
-    it('Should be closed', function () {
+    it('Should emit close if destroyed before end of pushing', function () {
       s.destroy()
       log.should.equal('close')
     })

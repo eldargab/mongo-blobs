@@ -38,9 +38,8 @@ describe('Readable', function () {
     s.on('data', function (data) {
       log('data:' + data)
     })
-    s.on('end', function () {
-      log('end')
-    })
+    s.on('end', log.fn('end'))
+    s.on('close', log.fn('close'))
     s.on('error', function (err) {
       log('error:' + err.message)
     })
@@ -62,14 +61,16 @@ describe('Readable', function () {
   })
 
   describe('On error', function () {
-    it('Emits error event', function () {
+    beforeEach(function () {
       s._read.values = [new Error('a')]
+    })
+
+    it('Should emit error and close events', function () {
       s._read.done()
-      log.should.equal('error:a')
+      log.should.equal('error:a close')
     })
 
     it('Should become non-readable', function (done) {
-      s._read.values = [new Error('a')]
       s.on('error', function () {
         s.readable.should.be.false
         done()
@@ -78,7 +79,6 @@ describe('Readable', function () {
     })
 
     it('Should not request for further values', function () {
-      s._read.values = [new Error('a')]
       s._read.done()
       s._read.pulled().should.be.false
     })
