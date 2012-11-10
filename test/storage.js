@@ -56,5 +56,13 @@ describe('Storage', function () {
           done()
         })
     })
+
+    it('Should support "head" event', function (done) {
+      storage.createReadStream(blob._id)
+        .on('head', function (head) {
+          head.should.eql(blob)
+          done()
+        })
+    })
   })
 })
