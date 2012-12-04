@@ -44,7 +44,7 @@ describe('Readable', function () {
       log('error:' + err.message)
     })
 
-    s.start()
+    s.resume()
   })
 
   it('Emits "data" event', function () {

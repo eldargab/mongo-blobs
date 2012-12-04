@@ -53,6 +53,7 @@ describe('Storage', function () {
           this.file.should.eql(blob)
           done()
         })
+        .resume()
     })
 
     it('Should support "head" event', function (done) {
@@ -61,6 +62,7 @@ describe('Storage', function () {
           head.should.eql(blob)
           done()
         })
+        .resume()
     })
 
     it('Should destroy itself right', function (done) {
@@ -73,6 +75,7 @@ describe('Storage', function () {
         })
         .on('error', done)
         .on('end', done)
+        .resume()
     })
   })
 })
