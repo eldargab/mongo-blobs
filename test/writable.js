@@ -1,4 +1,4 @@
-var Writeable = require('../lib/writeable')
+var Writable = require('../lib/writable')
 var Logger = require('test-log')
 
 function Downstream () {
@@ -22,13 +22,13 @@ function Downstream () {
   return downstream
 }
 
-describe('Writeable', function () {
+describe('writable', function () {
   var s, ds, log
 
   beforeEach(function () {
     log = Logger()
     ds = Downstream()
-    s = new Writeable
+    s = new Writable
     s.on('drain', log.fn('drain'))
     s.on('error', function (err) {
       log('error:' + err.message)
@@ -43,12 +43,12 @@ describe('Writeable', function () {
   })
 
   it('Should be writeable', function () {
-    s.writeable.should.be.true
+    s.writable.should.be.true
   })
 
   describe('When it has less than one chunk buffered...', function () {
-    it('.write() should return false', function () {
-      s.write('a').should.be.false
+    it('.write() should return <true>', function () {
+      s.write('a').should.be.true
     })
     it('nothing is pushed to downstream', function () {
       s.write('a')
@@ -57,8 +57,8 @@ describe('Writeable', function () {
   })
 
   describe('When more than one chunk was buffered', function () {
-    it('.write() returns true', function () {
-      s.write('abcd').should.be.true
+    it('.write() should return <false>', function () {
+      s.write('abcd').should.be.false
     })
     it('Downstream recieves pushes', function () {
       s.write('abcdef')
@@ -86,9 +86,9 @@ describe('Writeable', function () {
       s.end('b')
       log.should.equal('push:ab')
     })
-    it('Should make stream non-writeable', function () {
+    it('Should make stream non-writable', function () {
       s.end()
-      s.writeable.should.be.false
+      s.writable.should.be.false
     })
     it('Should support callback', function () {
       s.end('aaaabbb', log.fn('DONE'))
@@ -99,11 +99,11 @@ describe('Writeable', function () {
     })
   })
 
-  describe('Non-writeable stream', function () {
+  describe('Non-writable stream', function () {
     it('Should reject all writes', function () {
-      s.writeable = false // hack - this is readonly
+      s.writable = false // hack - this is readonly
       s.write('a')
-      log.should.equal('error:Stream is not writeable')
+      log.should.equal('error:Stream is not writable')
     })
   })
 
@@ -112,7 +112,7 @@ describe('Writeable', function () {
       s.write('aaaa')
       s.on('error', function (err) {
         err.message.should.equal('push')
-        s.writeable.should.be.false
+        s.writable.should.be.false
         done()
       })
       ds.done(new Error('push'))
@@ -128,7 +128,7 @@ describe('Writeable', function () {
   describe('Destroyed stream', function () {
     it('Should be non-writeable', function () {
       s.destroy()
-      s.writeable.should.be.false
+      s.writable.should.be.false
     })
     it('Should emit close if destroyed before end of pushing', function () {
       s.destroy()
